@@ -48,10 +48,10 @@ pub fn cpu_initialize() -> Cpu {
  * Prints all CPU registers and flag values
  */
 pub fn print_registers(cpu: &Cpu) {
-    println!( "PC: {}", cpu.pc );
-    println!( "SP: {}", cpu.sp );
-    println!( "A: {}", cpu.a );
-    println!( "X: {}", cpu.x );
-    println!( "Y: {}", cpu.y );
+    println!( "PC: 0x{:X}", cpu.pc );
+    println!( "SP: 0x{:X}", cpu.sp );
+    println!( "A: 0x{:X}", cpu.a );
+    println!( "X: 0x{:X}", cpu.x );
+    println!( "Y: 0x{:X}", cpu.y );
     println!( "Flags: {}", cpu.flags );
 }
