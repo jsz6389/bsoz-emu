@@ -85,7 +85,7 @@ pub fn fetch_byte(mem: &Mem, ptr: usize) -> u8 {
 
 
 /*
- * Fetches a word from memory
+ * Fetches a word from memory in little endian order
  *
  * @param mem The memory to be addressed
  *
@@ -94,9 +94,9 @@ pub fn fetch_byte(mem: &Mem, ptr: usize) -> u8 {
  * @return The fetched word
  */
 pub fn fetch_word(mem: &Mem, ptr: usize) -> u16 {
-    let mut word:u16 = mem.data[ptr].into(); //load the first byte
+    let mut word:u16 = mem.data[ptr+1].into(); //load the first byte
     word = word << 8; //put the first byte in its place
-    word += mem.data[ptr+1] as u16; //load the second byte
+    word += mem.data[ptr] as u16; //load the second byte
 
     return word;
 }
