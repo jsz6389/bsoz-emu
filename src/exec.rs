@@ -23,8 +23,8 @@ use lda;
  *
  * @param cycles the number of cycles to be run
  */
-pub fn exec(cpu: &mut cpu::Cpu, mem: &mut mem::Mem, mut cycles: usize){
-    while cycles > 0 {
+pub fn exec(cpu: &mut cpu::Cpu, mem: &mut mem::Mem){
+    while cpu.cycles > 0 {
 
         // fetch the next instruction and increment the PC
         let ins:u8 = mem::fetch_byte(&mem, cpu.pc as usize);
@@ -41,7 +41,7 @@ pub fn exec(cpu: &mut cpu::Cpu, mem: &mut mem::Mem, mut cycles: usize){
             0xA1 => { lda::ins( cpu, mem, address::Addr::DexDir ); } // LDA Indexed Indirect
             0xB1 => { lda::ins( cpu, mem, address::Addr::DirDex ); } // LDA Indirect Indexed
 
-            0x00 => { cycles = 0; } // Break Implied
+            0x00 => { cpu.cycles = 0; } // Break Implied
 
             _ => { println!("Invalid Instruction"); }
         }

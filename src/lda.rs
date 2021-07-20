@@ -47,13 +47,13 @@ pub fn ins(cpu: &mut cpu::Cpu, mem: &mut mem::Mem, addr: address::Addr) {
     // fetch the proper pointer based on the addressing mode
     let ptr:u16;
     match addr {
-        address::Addr::Imm => { ptr = address::immediate( cpu, mem); }
-        address::Addr::Zero => { ptr = address::zeropage( cpu, mem); }
-        address::Addr::ZeroX => { ptr = address::zeropage_x( cpu, mem); }
-        address::Addr::Abs => { ptr = address::absolute( cpu, mem); }
-        address::Addr::AbsY => { ptr = address::absolute_y( cpu, mem); }
-        address::Addr::DexDir => { ptr = address::indexed_indirect( cpu, mem); }
-        address::Addr::DirDex => { ptr = address::indirect_indexed( cpu, mem); }
+        address::Addr::Imm => { ptr = address::immediate( cpu, mem); cpu.cycles-=2; }
+        address::Addr::Zero => { ptr = address::zeropage( cpu, mem); cpu.cycles-=3; }
+        address::Addr::ZeroX => { ptr = address::zeropage_x( cpu, mem); cpu.cycles-=4; }
+        address::Addr::Abs => { ptr = address::absolute( cpu, mem); cpu.cycles-=4; }
+        address::Addr::AbsY => { ptr = address::absolute_y( cpu, mem); cpu.cycles-=4; }
+        address::Addr::DexDir => { ptr = address::indexed_indirect( cpu, mem); cpu.cycles-=6; }
+        address::Addr::DirDex => { ptr = address::indirect_indexed( cpu, mem); cpu.cycles-=5; }
         _ => { println!("Invalid Addressing mode"); ptr = 0; }
     }
 
