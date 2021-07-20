@@ -9,32 +9,9 @@
  */
 use cpu;
 use mem;
+use address;
+use lda;
 
-
-/*
- * Ties hex values to CPU instructions
- */
-enum Ins{
-    LdaImmediate = 0xa9,
-    LdaZeropage = 0xa5,
-    LdaZeropageX = 0xb5,
-    LdaAbsolute = 0xad,
-    LdaAbsoluteY = 0xbd,
-    LdaIndirectX = 0xa1,
-    LdaIndirectY = 0xb1,
-
-    BreakImplied = 0x00,
-
-    JmpAbsolute = 0x4c,
-    JmpIndirect = 0x6c,
-
-    IncZeropage = 0xe6,
-    IncZeropageX = 0xf6,
-    IncAbsolute = 0xee,
-    IncAbsoluteX = 0xfe,
-    Inx = 0xe8,
-    Iny = 0xc8
-}
 
 
 /*
@@ -47,7 +24,7 @@ enum Ins{
  * @param cycles the number of cycles to be run
  */
 pub fn exec(cpu: &mut cpu::Cpu, mem: &mut mem::Mem, mut cycles: usize){
-    while cycles > 0{
+    while cycles > 0 {
 
         // fetch the next instruction and increment the PC
         let ins:u8 = mem::fetch_byte(&mem, cpu.pc as usize);
@@ -55,7 +32,16 @@ pub fn exec(cpu: &mut cpu::Cpu, mem: &mut mem::Mem, mut cycles: usize){
 
         // Execute the instructions
         match ins {
-            x if x == Ins::BreakImplied as u8 => { cycles = 0; }
+
+            0xA9 => { lda::ins( cpu, mem, address::Addr::Imm ); } // LDA Immediate
+            0xA5 => { lda::ins( cpu, mem, address::Addr::Zero ); } // LDA Zeropage
+            0xB5 => { lda::ins( cpu, mem, address::Addr::ZeroX ); } // LDA Zeropage,X
+            0xAD => { lda::ins( cpu, mem, address::Addr::Abs ); } // LDA Absolute
+            0xBD => { lda::ins( cpu, mem, address::Addr::AbsY ); } // LDA Absolute,Y
+            0xA1 => { lda::ins( cpu, mem, address::Addr::DexDir ); } // LDA Indexed Indirect
+            0xB1 => { lda::ins( cpu, mem, address::Addr::DirDex ); } // LDA Indirect Indexed
+
+            0x00 => { cycles = 0; } // Break Implied
 
             _ => { println!("Invalid Instruction"); }
         }

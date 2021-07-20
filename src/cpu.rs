@@ -19,7 +19,7 @@ pub struct Cpu{
     pub a: u8,      // Accumulator
     pub x: u8,      // Index Register X
     pub y: u8,      // Index Register Y
-    pub flags: u8   // Flags
+    pub flags: u8   // Flags in this order: C,Z,I,D,B,V,N
    
 }
 

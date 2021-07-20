@@ -11,6 +11,7 @@ mod cpu;
 mod mem;
 mod exec;
 mod address;
+mod lda;
 
 
 /*

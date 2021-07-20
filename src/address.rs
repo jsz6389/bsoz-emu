@@ -14,6 +14,26 @@ use mem;
 
 
 /*
+ * 6502 addressing modes
+ */
+pub enum Addr {
+    Imp,    //Implicit
+    Acc,    //Accumulator
+    Imm,    //Immediate
+    Zero,   //Zeropage
+    ZeroX,  //Zeropage,X
+    ZeroY,  //Zeropage,Y
+    Rel,    //Relative
+    Abs,    //Absolute
+    AbsX,   //Absolute,X
+    AbsY,   //Absolute,Y
+    Indir,  //Indirect
+    DexDir, //Indexed Indirect
+    DirDex  //Indirect Indexed
+}
+
+
+/*
  * Fetches a pointer to the addressed data using immediate addressing
  *
  * @param cpu The cpu that will be addressing the pointer
@@ -22,7 +42,7 @@ use mem;
  *
  * @return A pointer to the desired data
  */
-pub fn address_immediate(cpu: &mut cpu::Cpu, _mem: &mem::Mem) -> u16 {
+pub fn immediate(cpu: &mut cpu::Cpu, _mem: &mem::Mem) -> u16 {
     let ptr:u16 = cpu.pc;
     cpu.pc+=1;
 
@@ -39,7 +59,7 @@ pub fn address_immediate(cpu: &mut cpu::Cpu, _mem: &mem::Mem) -> u16 {
  *
  * @return A pointer to the desired data
  */
-pub fn address_zeropage(cpu: &mut cpu::Cpu, mem: &mem::Mem) -> u16 {
+pub fn zeropage(cpu: &mut cpu::Cpu, mem: &mem::Mem) -> u16 {
     let ptr:u16 = mem::fetch_byte(&mem, cpu.pc.into()) as u16;
     cpu.pc+=1;
 
@@ -56,7 +76,7 @@ pub fn address_zeropage(cpu: &mut cpu::Cpu, mem: &mem::Mem) -> u16 {
  *
  * @return A pointer to the desired data
  */
-pub fn address_zeropage_x(cpu: &mut cpu::Cpu, mem: &mem::Mem) -> u16 {
+pub fn zeropage_x(cpu: &mut cpu::Cpu, mem: &mem::Mem) -> u16 {
     let ptr:u16 = (mem::fetch_byte(&mem, cpu.pc.into()) + cpu.x).into();
     cpu.pc+=1;
 
@@ -73,7 +93,7 @@ pub fn address_zeropage_x(cpu: &mut cpu::Cpu, mem: &mem::Mem) -> u16 {
  *
  * @return A pointer to the desired data
  */
-pub fn address_zeropage_y(cpu: &mut cpu::Cpu, mem: &mem::Mem) -> u16 {
+pub fn zeropage_y(cpu: &mut cpu::Cpu, mem: &mem::Mem) -> u16 {
     let ptr:u16 = (mem::fetch_byte(&mem, cpu.pc.into()) + cpu.y).into();
     cpu.pc+=1;
 
@@ -90,7 +110,7 @@ pub fn address_zeropage_y(cpu: &mut cpu::Cpu, mem: &mem::Mem) -> u16 {
  *
  * @return A pointer to the desired data
  */
-pub fn address_relative(cpu: &mut cpu::Cpu, mem: &mem::Mem) -> u16 {
+pub fn relative(cpu: &mut cpu::Cpu, mem: &mem::Mem) -> u16 {
     let mut byte:u8 = mem::fetch_byte(&mem, cpu.pc.into());
     let ptr:u16;
 
@@ -116,7 +136,7 @@ pub fn address_relative(cpu: &mut cpu::Cpu, mem: &mem::Mem) -> u16 {
  *
  * @return A pointer to the desired data
  */
-pub fn address_absolute(cpu: &mut cpu::Cpu, mem: &mem::Mem) -> u16 {
+pub fn absolute(cpu: &mut cpu::Cpu, mem: &mem::Mem) -> u16 {
     let ptr:u16 = mem::fetch_word(&mem, cpu.pc.into());
     cpu.pc+=2;
 
@@ -133,7 +153,7 @@ pub fn address_absolute(cpu: &mut cpu::Cpu, mem: &mem::Mem) -> u16 {
  *
  * @return A pointer to the desired data
  */
-pub fn address_absolute_x(cpu: &mut cpu::Cpu, mem: &mem::Mem) -> u16 {
+pub fn absolute_x(cpu: &mut cpu::Cpu, mem: &mem::Mem) -> u16 {
     let ptr:u16 = mem::fetch_word(&mem, cpu.pc.into()) + cpu.x as u16;
     cpu.pc+=2;
 
@@ -150,7 +170,7 @@ pub fn address_absolute_x(cpu: &mut cpu::Cpu, mem: &mem::Mem) -> u16 {
  *
  * @return A pointer to the desired data
  */
-pub fn address_absolute_y(cpu: &mut cpu::Cpu, mem: &mem::Mem) -> u16 {
+pub fn absolute_y(cpu: &mut cpu::Cpu, mem: &mem::Mem) -> u16 {
     let ptr:u16 = mem::fetch_word(&mem, cpu.pc.into()) + cpu.y as u16;
     cpu.pc+=2;
 
@@ -167,7 +187,7 @@ pub fn address_absolute_y(cpu: &mut cpu::Cpu, mem: &mem::Mem) -> u16 {
  *
  * @return A pointer to the desired data
  */
-pub fn address_indirect(cpu: &mut cpu::Cpu, mem: &mem::Mem) -> u16 {
+pub fn indirect(cpu: &mut cpu::Cpu, mem: &mem::Mem) -> u16 {
     let ptr:u16 = mem::fetch_word(&mem, mem::fetch_word(&mem, cpu.pc.into()).into());
     cpu.pc+=2;
 
@@ -184,11 +204,11 @@ pub fn address_indirect(cpu: &mut cpu::Cpu, mem: &mem::Mem) -> u16 {
  *
  * @return A pointer to the desired data
  */
-pub fn address_indexed_indirect(cpu: &mut cpu::Cpu, mem: &mem::Mem) -> u16 {
+pub fn indexed_indirect(cpu: &mut cpu::Cpu, mem: &mem::Mem) -> u16 {
     let ptr:u16 = mem::fetch_word(&mem, (mem::fetch_byte(&mem, cpu.pc.into()) + cpu.x).into());
     cpu.pc+=1;
 
-    return 0;
+    return ptr;
 }
 
 
@@ -201,7 +221,7 @@ pub fn address_indexed_indirect(cpu: &mut cpu::Cpu, mem: &mem::Mem) -> u16 {
  *
  * @return A pointer to the desired data
  */
-pub fn address_indirect_indexed(cpu: &mut cpu::Cpu, mem: &mem::Mem) -> u16 {
+pub fn indirect_indexed(cpu: &mut cpu::Cpu, mem: &mem::Mem) -> u16 {
     let ptr:u16 = mem::fetch_word(&mem, mem::fetch_byte(&mem, cpu.pc as usize).into()) + cpu.y as u16;
     cpu.pc+=2;
 
