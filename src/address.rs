@@ -4,7 +4,7 @@
  *
  * Contains functions for addressing memory
  * For more information on x86 addressing modes please see
- * https://obelisk.me.uk/6502/addressing.html
+ * http://obelisk.me.uk/6502/addressing.html
  *
  * Copyright (C) 2021 Jakob Zielinski <jakobzee3@gmail.com>
  *
@@ -185,8 +185,9 @@ pub fn address_indirect(cpu: &mut cpu::Cpu, mem: &mem::Mem) -> u16 {
  * @return A pointer to the desired data
  */
 pub fn address_indexed_indirect(cpu: &mut cpu::Cpu, mem: &mem::Mem) -> u16 {
-    // TODO implement indexed indirect addressing
-    
+    let ptr:u16 = mem::fetch_word(&mem, (mem::fetch_byte(&mem, cpu.pc.into()) + cpu.x).into());
+    cpu.pc+=1;
+
     return 0;
 }
 
