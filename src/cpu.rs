@@ -14,12 +14,12 @@
  */
 pub struct Cpu{
     
-    pc: u16,    // Program Counter
-    sp: u8,     // Stack Pointer
-    a: u8,      // Accumulator
-    x: u8,      // Index Register X
-    y: u8,      // Index Register Y
-    flags: u8   // Flags
+    pub pc: u16,    // Program Counter
+    pub sp: u8,     // Stack Pointer
+    pub a: u8,      // Accumulator
+    pub x: u8,      // Index Register X
+    pub y: u8,      // Index Register Y
+    pub flags: u8   // Flags
    
 }
 

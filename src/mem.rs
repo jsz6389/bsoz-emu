@@ -14,7 +14,7 @@
  */
 pub struct Mem{
 
-    data: [u8; 0xFFFF]
+    pub data: [u8; 0xFFFF]
 
 }
 
@@ -100,3 +100,4 @@ pub fn fetch_word(mem: &Mem, ptr: usize) -> u16 {
 
     return word;
 }
+
