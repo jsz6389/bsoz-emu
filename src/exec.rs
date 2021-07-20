@@ -14,7 +14,7 @@ use mem;
 /*
  * Ties hex values to CPU instructions
  */
-enum ins{
+enum Ins{
     LdaImmediate = 0xa9,
     LdaZeropage = 0xa5,
     LdaZeropageX = 0xb5,
@@ -47,7 +47,7 @@ enum ins{
  * @param cycles the number of cycles to be run
  */
 pub fn exec(cpu: &mut cpu::Cpu, mem: &mut mem::Mem, mut cycles: usize){
-    while(cycles > 0){
+    while cycles > 0{
 
         // fetch the next instruction and increment the PC
         let ins:u8 = mem::fetch_byte(&mem, cpu.pc as usize);
@@ -55,7 +55,7 @@ pub fn exec(cpu: &mut cpu::Cpu, mem: &mut mem::Mem, mut cycles: usize){
 
         // Execute the instructions
         match ins {
-            x if x == ins::BreakImplied as u8 => { cycles = 0; }
+            x if x == Ins::BreakImplied as u8 => { cycles = 0; }
 
             _ => { println!("Invalid Instruction"); }
         }
