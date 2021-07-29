@@ -19,7 +19,15 @@ pub struct Cpu{
     pub a: u8,      // Accumulator
     pub x: u8,      // Index Register X
     pub y: u8,      // Index Register Y
-    pub flags: u8,   // Flags in this order: C,Z,I,D,B,V,N
+
+    // Flags
+    pub c: bool,    // Carry
+    pub z: bool,    // Zero
+    pub i: bool,    // Interrupt
+    pub d: bool,    // Decimal
+    pub b: bool,    // Break Command
+    pub v: bool,    // Overflow
+    pub n: bool,    // Negative
     pub cycles: i64
    
 }
@@ -39,7 +47,13 @@ pub fn cpu_initialize() -> Cpu {
         a: 0x00,
         x: 0x00,
         y: 0x00,
-        flags: 0x00,
+        c: true,
+        z: true,
+        i: true,
+        d: true,
+        b: true,
+        v: true,
+        n: true,
         cycles: 0xFFFFFFFF
 
     }
@@ -55,5 +69,12 @@ pub fn print_registers(cpu: &Cpu) {
     println!( "A: 0x{:X}", cpu.a );
     println!( "X: 0x{:X}", cpu.x );
     println!( "Y: 0x{:X}", cpu.y );
-    println!( "Flags: {}", cpu.flags );
+    println!( "Flags" );
+    println!( "Zero: {}", cpu.z );
+    println!( "Carry: {}", cpu.c);
+    println!( "Integer: {}", cpu.i );
+    println!( "Decimal: {}", cpu.d );
+    println!( "Break: {}", cpu.b );
+    println!( "Overflow: {}", cpu.v );
+    println!( "Negative: {}", cpu.n );
 }

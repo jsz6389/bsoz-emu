@@ -9,29 +9,7 @@
 use cpu;
 use mem;
 use address;
-
-/*
- * Sets flags once the LDA instruction has been executed
- *
- * @param cpu The cpu to check
- */
-fn set_flags(cpu: &mut cpu::Cpu) {
-
-    // check the zero flag
-    if cpu.a == 0 {
-        cpu.flags |= 0b0100_0000;
-    } else {
-        cpu.flags &= 0b1011_1111;
-    }
-
-    // check the negative flag
-    if cpu.a|0b0111_1111 == 0b1111_1111 {
-        cpu.flags |= 0b0000_0010;
-    } else {
-        cpu.flags &= 0b1111_1101;
-    }
-
-}
+use setflags;
 
 
 /*
@@ -58,5 +36,9 @@ pub fn ins(cpu: &mut cpu::Cpu, mem: &mut mem::Mem, addr: address::Addr) {
     }
 
     cpu.a = mem::fetch_byte(&mem, ptr as usize); // set the accumulator to the addressed pointer
-    set_flags(cpu);
+    
+    let val = cpu.a;
+    setflags::zero(cpu, val);
+    let val = cpu.a;
+    setflags::zero(cpu, val);
 }

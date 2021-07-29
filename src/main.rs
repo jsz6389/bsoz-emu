@@ -12,6 +12,7 @@ mod mem;
 mod exec;
 mod address;
 mod lda;
+mod setflags;
 
 
 /*
